@@ -1,0 +1,11 @@
+server:
+  port: 8000
+# 配置路由转发
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: route-user
+          uri: http://127.0.0.1:8001
+          predicates:
+            - Path=/user-service/**

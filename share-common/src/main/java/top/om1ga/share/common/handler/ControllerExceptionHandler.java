@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.om1ga.share.common.exception.BusinessException;
 import top.om1ga.share.common.resp.CommonResp;
 
 /**
@@ -17,6 +18,11 @@ import top.om1ga.share.common.resp.CommonResp;
 @Slf4j
 public class ControllerExceptionHandler {
 
+    /**
+     * 系统异常统一处理
+     * @param e Exception
+     * @return CommonResp
+     */
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public CommonResp<?> exceptionHandler(Exception e){
@@ -24,6 +30,21 @@ public class ControllerExceptionHandler {
         log.error("系统异常", e);
         resp.setSuccess(false);
         resp.setMessage(e.getMessage());
+        return resp;
+    }
+
+    /**
+     * 业务异常统一处理
+     * @param e BusinessException
+     * @return CommonResp
+     */
+    @ExceptionHandler(value = BusinessException.class)
+    @ResponseBody
+    public CommonResp<?> exceptionHandler(BusinessException e){
+        CommonResp<?> resp = new CommonResp<>();
+        log.error("业务异常", e);
+        resp.setSuccess(false);
+        resp.setMessage(e.getE().getDesc());
         return resp;
     }
 }

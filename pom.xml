@@ -19,6 +19,7 @@
     <description>share-api</description>
     <modules>
         <module>share-user</module>
+        <module>share-common</module>
     </modules>
 
     <properties>

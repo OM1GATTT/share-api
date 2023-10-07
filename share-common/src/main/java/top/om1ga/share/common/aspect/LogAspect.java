@@ -1,4 +1,4 @@
-package top.om1ga.share.user.aspect;
+package top.om1ga.share.common.aspect;
 
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;

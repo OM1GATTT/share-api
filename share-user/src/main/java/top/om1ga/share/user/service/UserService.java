@@ -7,6 +7,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.om1ga.share.common.exception.BusinessException;
 import top.om1ga.share.common.exception.BusinessExceptionEnum;
+import top.om1ga.share.common.util.JwtUtil;
 import top.om1ga.share.common.util.SnowUtil;
 import top.om1ga.share.user.domain.dto.LoginDTO;
 import top.om1ga.share.user.domain.entity.User;
@@ -45,9 +46,9 @@ public class UserService {
         }
         // 都正确，返回
         UserLoginResp userLoginResp = UserLoginResp.builder().user(userDB).build();
-        String key = "om1ga";
-        Map<String,Object> map = BeanUtil.beanToMap(userLoginResp);
-        String token = JWTUtil.createToken(map, key.getBytes());
+        //String key = "om1ga";
+        //Map<String,Object> map = BeanUtil.beanToMap(userLoginResp);
+        String token = JwtUtil.createToken(userLoginResp.getUser().getId(), userLoginResp.getUser().getPhone());
         userLoginResp.setToken(token);
         return userLoginResp;
     }

@@ -1,4 +1,4 @@
-package top.om1ga.share.common.util;
+package top.om1ga.share.gateway.util;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
@@ -27,7 +27,7 @@ public class JwtUtil {
 
     public static String createToken(Long id, String phone) {
         DateTime now = DateTime.now();
-        DateTime expTime = now.offsetNew(DateField.SECOND, 100);
+        DateTime expTime = now.offsetNew(DateField.SECOND, 100000);
         Map<String, Object> payload = new HashMap<>();
         // 签发时间
         payload.put(JWTPayload.ISSUED_AT, now);

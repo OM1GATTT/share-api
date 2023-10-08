@@ -38,3 +38,6 @@ Content-Type: application/json
   "password":"888888"
 }
 ###
+GET http://localhost:8000/content-service/share/notice
+Accept: application/json
+###

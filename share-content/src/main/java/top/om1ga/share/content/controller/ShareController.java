@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import top.om1ga.share.common.resp.CommonResp;
 import top.om1ga.share.common.util.JwtUtil;
+import top.om1ga.share.content.domain.dto.ExchangeDTO;
 import top.om1ga.share.content.domain.entity.Notice;
 import top.om1ga.share.content.domain.entity.Share;
 import top.om1ga.share.content.domain.resp.ShareResp;
@@ -73,6 +74,14 @@ public class ShareController {
         ShareResp shareResp = shareService.findById(id);
         CommonResp<ShareResp> commonResp = new CommonResp<>();
         commonResp.setData(shareResp);
+        return commonResp;
+    }
+
+    @PostMapping("/exchange")
+    public CommonResp<Share> exchange(@RequestBody ExchangeDTO exchangeDTO){
+        System.out.println(exchangeDTO);
+        CommonResp<Share> commonResp = new CommonResp<>();
+        commonResp.setData(shareService.exchange(exchangeDTO));
         return commonResp;
     }
 }

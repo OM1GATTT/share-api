@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import top.om1ga.share.common.resp.CommonResp;
 import top.om1ga.share.user.domain.dto.LoginDTO;
+import top.om1ga.share.user.domain.dto.UserAddBonusMsgDTO;
 import top.om1ga.share.user.domain.entity.User;
 import top.om1ga.share.user.domain.resp.UserLoginResp;
 import top.om1ga.share.user.service.UserService;
@@ -21,6 +22,22 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @PutMapping(value = "/update-bonus")
+    public CommonResp<User> updateBonus(@RequestBody UserAddBonusMsgDTO userAddBonusMsgDTO){
+        Long userId = userAddBonusMsgDTO.getUserId();
+        userService.updateBonus(
+                UserAddBonusMsgDTO.builder()
+                        .userId(userId)
+                        .bonus(userAddBonusMsgDTO.getBonus())
+                        .description("兑换分享")
+                        .event("BUY")
+                        .build()
+        );
+        CommonResp<User> commonResp = new CommonResp<>();
+        commonResp.setData(userService.findById(userId));
+        return commonResp;
+    }
 
     @GetMapping("/count")
     public CommonResp<Long> count(){

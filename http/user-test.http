@@ -55,3 +55,21 @@ token: {{token}}
 GET http://10.20.236.110:8000/content-service/share/1
 Accept: application/json
 token: {{token}}
+###
+PUT http://localhost:8000/user-service/user/update-bonus
+Content-Type: application/json
+token: {{token}}
+
+{
+  "userId": 1,
+  "bonus": -11
+}
+###
+POST http://localhost:8000/content-service/share/exchange
+Content-Type: application/json
+token: {{token}}
+
+{
+  "userId": 1,
+  "shareId": 11
+}

@@ -6,8 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.util.StringUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import top.om1ga.share.common.resp.CommonResp;
 import top.om1ga.share.content.domain.entity.MidUserShare;
 import top.om1ga.share.content.domain.entity.Share;
+import top.om1ga.share.content.domain.resp.ShareResp;
+import top.om1ga.share.content.feign.User;
+import top.om1ga.share.content.feign.UserService;
 import top.om1ga.share.content.mapper.MidUserShareMapper;
 import top.om1ga.share.content.mapper.ShareMapper;
 
@@ -26,8 +30,18 @@ public class ShareService {
     private ShareMapper shareMapper;
 
     @Resource
+    private UserService userService;
+    @Resource
     private MidUserShareMapper midUserShareMapper;
 
+    /**
+     * 主页分享列表
+     * @param title 查询参数-标题
+     * @param pageNo 查询参数-页码
+     * @param pageSize 查询参数-每页分享的个数
+     * @param userId 查询参数-用户id
+     * @return 分享列表
+     */
     public List<Share> getList(String title,Integer pageNo,Integer pageSize,Long userId){
         // 构建查询条件
         LambdaQueryWrapper<Share> wrapper = new LambdaQueryWrapper<>();
@@ -48,7 +62,7 @@ public class ShareService {
         // 处理后的 Share 数据列表
         List<Share> sharesDeal;
 
-        // 1.如果用户为登录，那么 downloadUrl 全部设为 null
+        // 1.如果用户未登录，那么 downloadUrl 全部设为 null
         if (userId == null){
             sharesDeal = shares.stream().peek(share -> share.setDownloadUrl(null)).collect(Collectors.toList());
         }else {
@@ -64,5 +78,11 @@ public class ShareService {
             }).collect(Collectors.toList());
         }
         return sharesDeal;
+    }
+
+    public ShareResp findById(Long shareId){
+        Share share = shareMapper.selectById(shareId);
+        CommonResp<User> commonResp = userService.getUser(share.getUserId());
+        return ShareResp.builder().share(share).nickname(commonResp.getData().getNickname()).avatarUrl(commonResp.getData().getAvatarUrl()).build();
     }
 }

@@ -8,6 +8,7 @@ import top.om1ga.share.common.resp.CommonResp;
 import top.om1ga.share.common.util.JwtUtil;
 import top.om1ga.share.content.domain.entity.Notice;
 import top.om1ga.share.content.domain.entity.Share;
+import top.om1ga.share.content.domain.resp.ShareResp;
 import top.om1ga.share.content.service.NoticeService;
 import top.om1ga.share.content.service.ShareService;
 
@@ -65,5 +66,13 @@ public class ShareController {
             log.info("没有token");
         }
         return userId;
+    }
+
+    @GetMapping("/{id}")
+    public CommonResp<ShareResp> getShareById(@PathVariable Long id){
+        ShareResp shareResp = shareService.findById(id);
+        CommonResp<ShareResp> commonResp = new CommonResp<>();
+        commonResp.setData(shareResp);
+        return commonResp;
     }
 }

@@ -1,6 +1,7 @@
 package top.om1ga.share.gateway.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -19,6 +20,7 @@ import top.om1ga.share.gateway.util.JwtUtil;
 @Component
 @Slf4j
 public class LoginUserFilter implements Ordered, GlobalFilter {
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();

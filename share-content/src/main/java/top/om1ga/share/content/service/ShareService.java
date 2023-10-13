@@ -8,6 +8,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.om1ga.share.common.resp.CommonResp;
 import top.om1ga.share.content.domain.dto.ExchangeDTO;
+import top.om1ga.share.content.domain.dto.ShareRequestDTO;
 import top.om1ga.share.content.domain.entity.MidUserShare;
 import top.om1ga.share.content.domain.entity.Share;
 import top.om1ga.share.content.domain.resp.ShareResp;
@@ -16,6 +17,8 @@ import top.om1ga.share.content.feign.UserAddBonusMsgDTO;
 import top.om1ga.share.content.feign.UserService;
 import top.om1ga.share.content.mapper.MidUserShareMapper;
 import top.om1ga.share.content.mapper.ShareMapper;
+
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -118,5 +121,25 @@ public class ShareService {
         // 向 mid_user_share 表插入一条数据，让这个用户对于这条资源拥有了下载权限
         midUserShareMapper.insert(MidUserShare.builder().userId(userId).shareId(shareId).build());
         return share;
+    }
+
+    public int contribute(ShareRequestDTO shareRequestDTO){
+        Share share = Share.builder()
+                .isOriginal(shareRequestDTO.getIsOriginal())
+                .author(shareRequestDTO.getAuthor())
+                .price(shareRequestDTO.getPrice())
+                .downloadUrl(shareRequestDTO.getDownloadUrl())
+                .summary(shareRequestDTO.getSummary())
+                .buyCount(0)
+                .title(shareRequestDTO.getTitle())
+                .userId(shareRequestDTO.getUserId())
+                .cover(shareRequestDTO.getCover())
+                .createTime(new Date())
+                .updateTime(new Date())
+                .showFlag(false)
+                .auditStatus("NOT_YET")
+                .reason("未审核")
+                .build();
+        return shareMapper.insert(share);
     }
 }

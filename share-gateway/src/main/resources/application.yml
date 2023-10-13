@@ -1,9 +1,6 @@
 server:
   port: 8000
 # 配置路由转发
-spring:
-  application:
-    name: gateway-service
   cloud:
     nacos:
       discovery:
@@ -11,29 +8,3 @@ spring:
         heart-beat-interval: 5000
         heart-beat-timeout: 15000
         namespace: dev
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-      routes:
-        - id: route-user
-          uri: lb://user-service
-          predicates:
-            - Path=/user-service/**
-        - id: route-content
-          uri: lb://content-service
-          predicates:
-            - Path=/content-service/**
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            # 允许请求来源
-            allowedOriginPatterns: '*'
-            # 允许携带的头信息
-            allowedHeaders: '*'
-            # 允许的请求方式
-            allowedMethods: '*'
-            # 是否允许携带cookie
-            allowCredentials: 'true'
-            # 跨域检测的有效期，会发起一个OPTION请求
-            maxAge: '3600'

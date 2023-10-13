@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: content-service
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        namespace: dev
+        refresh-enabled: true
+        enable-remote-sync-config: true

@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: share-gateway-service
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        namespace: dev
+        refresh-enabled: true
+        timeout: 5000
+        config-long-poll-timeout: 10000
+        config-retry-time: 2000
+        max-retry: 3

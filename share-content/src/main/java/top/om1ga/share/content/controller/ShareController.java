@@ -3,10 +3,13 @@ package top.om1ga.share.content.controller;
 import cn.hutool.json.JSONObject;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 import top.om1ga.share.common.resp.CommonResp;
 import top.om1ga.share.common.util.JwtUtil;
 import top.om1ga.share.content.domain.dto.ExchangeDTO;
+import top.om1ga.share.content.domain.dto.ShareRequestDTO;
 import top.om1ga.share.content.domain.entity.Notice;
 import top.om1ga.share.content.domain.entity.Share;
 import top.om1ga.share.content.domain.resp.ShareResp;
@@ -21,10 +24,14 @@ import java.util.List;
  * @date 2023年10月08日 15:03
  * @description ShareController
  */
+@RefreshScope
 @RestController
 @RequestMapping(value = "/share")
 @Slf4j
 public class ShareController {
+
+    @Value(value = "${systemUpdateNotice}")
+    private Boolean systemUpdateNotice;
 
     @Resource
     private NoticeService noticeService;
@@ -34,9 +41,22 @@ public class ShareController {
 
     private final int MAX = 100;
 
+
+    @PostMapping("/contribute")
+    public int contributeShare(@RequestBody ShareRequestDTO shareRequestDTO,@RequestHeader(value = "token",required = false)String token){
+        long userId = getUserIdFromToken(token);
+        shareRequestDTO.setUserId(userId);
+        System.out.println(shareRequestDTO);
+        return shareService.contribute(shareRequestDTO);
+    }
     @GetMapping("/notice")
     public CommonResp<Notice> getLatestNotice(){
+        System.out.println(systemUpdateNotice);
         CommonResp<Notice> commonResp = new CommonResp<>();
+        if (systemUpdateNotice){
+            commonResp.setData(Notice.builder().content("系统正在维护中...").build());
+            return commonResp;
+        }
         commonResp.setData(noticeService.getLatest());
         return commonResp;
     }

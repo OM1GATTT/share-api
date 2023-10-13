@@ -2,3 +2,8 @@ server:
   port: 8002
 #  servlet:
 #    context-path: /content-service
+rocketmq:
+  name-server: 49.234.46.251:9876
+  producer:
+    # 必须指定 group
+    group: test-group

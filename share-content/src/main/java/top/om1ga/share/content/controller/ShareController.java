@@ -42,6 +42,19 @@ public class ShareController {
     private final int MAX = 100;
 
 
+    @GetMapping("/my-contribute")
+    public CommonResp<List<Share>> myContribute(@RequestParam(required = false,defaultValue = "1")Integer pageNo,
+                                                @RequestParam(required = false,defaultValue = "8")Integer pageSize,
+                                                @RequestHeader(value = "token",required = false) String token){
+        if (pageSize > MAX){
+            pageSize=MAX;
+        }
+        long userId = getUserIdFromToken(token);
+        CommonResp<List<Share>> commonResp = new CommonResp<>();
+        commonResp.setData(shareService.myContribute(pageNo,pageSize,userId));
+        return commonResp;
+
+    }
     @PostMapping("/contribute")
     public int contributeShare(@RequestBody ShareRequestDTO shareRequestDTO,@RequestHeader(value = "token",required = false)String token){
         long userId = getUserIdFromToken(token);

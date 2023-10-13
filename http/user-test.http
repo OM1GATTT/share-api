@@ -89,3 +89,7 @@ token: {{token}}
   "cover": "https://niit-soft.oss-cn-hangzhou.aliyuncs.com/share-app/Vue.jpg",
   "summary": "详解 Vue.js详解 Vue.js详解 Vue.js详解 Vue.js详解 Vue.js"
 }
+###
+GET http://localhost:8000/content-service/share/my-contribute
+Accept: application/json
+token: {{token}}

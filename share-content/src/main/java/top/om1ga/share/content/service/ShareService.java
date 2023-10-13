@@ -142,4 +142,11 @@ public class ShareService {
                 .build();
         return shareMapper.insert(share);
     }
+
+    public List<Share> myContribute(Integer pageNo,Integer pageSize,Long userId){
+        LambdaQueryWrapper<Share> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Share::getUserId,userId);
+        Page<Share> page = Page.of(pageNo, pageSize);
+        return shareMapper.selectList(page,wrapper);
+    }
 }

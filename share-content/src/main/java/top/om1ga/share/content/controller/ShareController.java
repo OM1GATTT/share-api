@@ -88,6 +88,20 @@ public class ShareController {
         return commonResp;
     }
 
+    @GetMapping("/exchange/list")
+    public CommonResp<List<Share>> getExchangeList(
+                                                @RequestParam(required = false,defaultValue = "1")Integer pageNo,
+                                                @RequestParam(required = false,defaultValue = "8")Integer pageSize,
+                                                @RequestHeader(value = "token",required = false) String token){
+        if(pageSize>MAX){
+            pageSize=MAX;
+        }
+        long userId = getUserIdFromToken(token);
+        CommonResp<List<Share>> commonResp = new CommonResp<>();
+        commonResp.setData(shareService.getExchangedList(pageNo,pageSize,userId));
+        return commonResp;
+    }
+
     private long getUserIdFromToken(String token){
         log.info(">>>>>>>>>token"+token);
         long userId=0;

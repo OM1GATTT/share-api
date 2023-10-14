@@ -160,12 +160,18 @@ public class ShareService {
      * 查询待审核状态的shares列表
      * @return List<Share>
      */
-    public List<Share> querySharesNotYet(){
+    public List<Share> querySharesNotYet(Integer pageNo,Integer pageSize,Long userId){
+        CommonResp<User> user = userService.getUser(userId);
+        if (!user.getData().getRoles().equals("admin")){
+            throw new IllegalArgumentException("用户不是管理员账户，无访问权限");
+        }
         LambdaQueryWrapper<Share> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByDesc(Share::getId);
         wrapper.eq(Share::getShowFlag,false)
                 .eq(Share::getAuditStatus,"NOT_YET");
-        return shareMapper.selectList(wrapper);
+        Page<Share> page = Page.of(pageNo, pageSize);
+        return shareMapper.selectList(page,wrapper);
+
     }
 
     /**

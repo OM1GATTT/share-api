@@ -39,7 +39,7 @@ public class ShareController {
     @Resource
     private ShareService shareService;
 
-    private final int MAX = 100;
+    private final int MAX = 10;
 
 
     @GetMapping("/my-contribute")

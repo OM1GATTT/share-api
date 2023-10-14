@@ -7,3 +7,7 @@ rocketmq:
   producer:
     # 必须指定 group
     group: test-group
+spring:
+  jackson:
+    generator:
+      write-numbers-as-strings: true

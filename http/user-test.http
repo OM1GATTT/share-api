@@ -112,3 +112,6 @@ token: {{token}}
 GET http://localhost:8000/content-service/share/exchange/list
 Accept: application/json
 token: {{token}}
+###
+GET http://localhost:8000/user-service/user/bonus/list?pageNo=2&pageSize=20
+token: {{token}}

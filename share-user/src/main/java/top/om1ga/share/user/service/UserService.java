@@ -2,7 +2,9 @@ package top.om1ga.share.user.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.jwt.JWTUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import top.om1ga.share.user.mapper.BonusEventLogMapper;
 import top.om1ga.share.user.mapper.UserMapper;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +41,18 @@ public class UserService {
     @Resource
     private BonusEventLogMapper bonusEventLogMapper;
 
+    public List<BonusEventLog>  getBonusEventLogList(Integer pageNo,Integer pageSize,Long userId){
+        if (userId==null){
+            throw new IllegalArgumentException("用户未登录！");
+        }
+        LambdaQueryWrapper<BonusEventLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.orderByDesc(BonusEventLog::getId);
+        wrapper.eq(BonusEventLog::getUserId,userId);
+        Page<BonusEventLog> page = Page.of(pageNo,pageSize);
+        // 执行按条件查询
+        return bonusEventLogMapper.selectList(page,wrapper);
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public void updateBonus(UserAddBonusMsgDTO userAddBonusMsgDTO){
         System.out.println(userAddBonusMsgDTO);
@@ -53,6 +68,7 @@ public class UserService {
                 .value(bonus)
                 .description(userAddBonusMsgDTO.getDescription())
                 .event(userAddBonusMsgDTO.getEvent())
+                .createTime(new Date())
                 .build());
         log.info("积分添加完毕...");
     }

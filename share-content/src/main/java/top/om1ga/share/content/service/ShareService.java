@@ -4,10 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.util.StringUtil;
+import io.minio.ObjectWriteResponse;
 import jakarta.annotation.Resource;
+import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import top.om1ga.share.common.resp.CommonResp;
+import top.om1ga.share.content.config.MinioConfig;
 import top.om1ga.share.content.domain.dto.ExchangeDTO;
 import top.om1ga.share.content.domain.dto.ShareAuditDTO;
 import top.om1ga.share.content.domain.dto.ShareRequestDTO;
@@ -34,6 +40,7 @@ import java.util.stream.Collectors;
  * @description ShareService
  */
 @Service
+@AllArgsConstructor
 public class ShareService {
     @Resource
     private ShareMapper shareMapper;
@@ -43,6 +50,29 @@ public class ShareService {
     private MidUserShareMapper midUserShareMapper;
     @Resource
     private RocketMQTemplate rocketMQTemplate;
+
+    private MinioConfig minioConfig;
+
+    private final String bucketName = "share-bucket";
+    private final String directory = "avatar";
+
+
+    public String uploadAvatar(MultipartFile file){
+        String originalFilename = file.getOriginalFilename();
+        if (StringUtils.isBlank(originalFilename)){
+            throw new RuntimeException();
+        }
+        String objectName = directory+ "/"+originalFilename;
+        ObjectWriteResponse response;
+        try {
+            response = minioConfig.putObject(bucketName, objectName, file.getInputStream());
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        System.out.println(response.headers());
+        return minioConfig.getPreviewFileUrl(bucketName, objectName);
+    }
 
     /**
      * 主页分享列表

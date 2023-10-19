@@ -8,6 +8,14 @@ rocketmq:
     # 必须指定 group
     group: test-group
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   jackson:
     generator:
       write-numbers-as-strings: true
+minio:
+  endPoint: http://49.234.46.251:9000
+  accessKey: admin
+  secretKey: admin123456

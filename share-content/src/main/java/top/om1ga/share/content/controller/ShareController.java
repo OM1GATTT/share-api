@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import top.om1ga.share.common.resp.CommonResp;
 import top.om1ga.share.common.util.JwtUtil;
 import top.om1ga.share.content.domain.dto.ExchangeDTO;
@@ -41,6 +42,14 @@ public class ShareController {
 
     private final int MAX = 10;
 
+
+    @PostMapping("/uploadAvatar")
+    public CommonResp<String> uploadAvatar(MultipartFile file){
+        String s = shareService.uploadAvatar(file);
+        CommonResp<String> commonResp = new CommonResp<>();
+        commonResp.setData(s);
+        return commonResp;
+    }
 
     @GetMapping("/my-contribute")
     public CommonResp<List<Share>> myContribute(@RequestParam(required = false,defaultValue = "1")Integer pageNo,

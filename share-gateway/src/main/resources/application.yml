@@ -8,3 +8,11 @@ server:
         heart-beat-interval: 5000
         heart-beat-timeout: 15000
         namespace: dev
+
+# 这里配置文档聚合规则
+knife4j:
+  gateway:
+    enabled: true
+    strategy: discover
+    discover:  # 开启服务发现，启动之后就会自动聚合在注册中心注册的所有微服务文档了
+      enabled: true

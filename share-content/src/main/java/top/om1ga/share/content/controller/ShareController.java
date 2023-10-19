@@ -1,6 +1,11 @@
 package top.om1ga.share.content.controller;
 
 import cn.hutool.json.JSONObject;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +30,7 @@ import java.util.List;
  * @date 2023年10月08日 15:03
  * @description ShareController
  */
+@Tag(name = "内容中心")
 @RefreshScope
 @RestController
 @RequestMapping(value = "/share")
@@ -43,6 +49,8 @@ public class ShareController {
     private final int MAX = 10;
 
 
+    @Operation(summary = "更新头像")
+    @Parameters(@Parameter(name = "file",description = "文件",in= ParameterIn.QUERY))
     @PostMapping("/uploadAvatar")
     public CommonResp<String> uploadAvatar(MultipartFile file){
         String s = shareService.uploadAvatar(file);
@@ -51,6 +59,10 @@ public class ShareController {
         return commonResp;
     }
 
+    @Operation(summary = "我的投稿列表")
+    @Parameters({@Parameter(name = "pageNo",description = "页码",in = ParameterIn.QUERY),
+            @Parameter(name = "pageSize",description = "每页个数",in = ParameterIn.QUERY),
+            @Parameter(name = "token",description = "请求token",in = ParameterIn.HEADER)})
     @GetMapping("/my-contribute")
     public CommonResp<List<Share>> myContribute(@RequestParam(required = false,defaultValue = "1")Integer pageNo,
                                                 @RequestParam(required = false,defaultValue = "8")Integer pageSize,
@@ -64,13 +76,19 @@ public class ShareController {
         return commonResp;
 
     }
+
+    @Operation(summary = "投稿")
+    @Parameters(@Parameter(name = "token",description = "请求token",in = ParameterIn.HEADER))
     @PostMapping("/contribute")
-    public int contributeShare(@RequestBody ShareRequestDTO shareRequestDTO,@RequestHeader(value = "token",required = false)String token){
+    public int contributeShare(@RequestBody ShareRequestDTO shareRequestDTO,
+                               @RequestHeader(value = "token",required = false)String token){
         long userId = getUserIdFromToken(token);
         shareRequestDTO.setUserId(userId);
         System.out.println(shareRequestDTO);
         return shareService.contribute(shareRequestDTO);
     }
+
+    @Operation(summary = "获取最新公告")
     @GetMapping("/notice")
     public CommonResp<Notice> getLatestNotice(){
         System.out.println(systemUpdateNotice);
@@ -83,6 +101,12 @@ public class ShareController {
         return commonResp;
     }
 
+    @Operation(summary = "获取分享列表")
+    @Parameters({
+            @Parameter(name = "title",description = "标题",in = ParameterIn.QUERY),
+            @Parameter(name = "pageNo",description = "页码",in = ParameterIn.QUERY),
+            @Parameter(name = "pageSize",description = "每页个数",in = ParameterIn.QUERY),
+            @Parameter(name = "token",description = "请求token",in = ParameterIn.HEADER)})
     @GetMapping("/list")
     public CommonResp<List<Share>> getShareList(@RequestParam(required = false) String title,
                                                 @RequestParam(required = false,defaultValue = "1")Integer pageNo,
@@ -97,6 +121,10 @@ public class ShareController {
         return commonResp;
     }
 
+    @Operation(summary = "我的兑换列表")
+    @Parameters({@Parameter(name = "pageNo",description = "页码",in = ParameterIn.QUERY),
+            @Parameter(name = "pageSize",description = "每页个数",in = ParameterIn.QUERY),
+            @Parameter(name = "token",description = "请求token",in = ParameterIn.HEADER)})
     @GetMapping("/exchange/list")
     public CommonResp<List<Share>> getExchangeList(
                                                 @RequestParam(required = false,defaultValue = "1")Integer pageNo,
@@ -125,6 +153,8 @@ public class ShareController {
         return userId;
     }
 
+    @Operation(summary = "查询单个分享信息")
+    @Parameters(@Parameter(name = "id",description = "id",in = ParameterIn.PATH))
     @GetMapping("/{id}")
     public CommonResp<ShareResp> getShareById(@PathVariable Long id){
         ShareResp shareResp = shareService.findById(id);
@@ -133,6 +163,7 @@ public class ShareController {
         return commonResp;
     }
 
+    @Operation(summary ="兑换")
     @PostMapping("/exchange")
     public CommonResp<Share> exchange(@RequestBody ExchangeDTO exchangeDTO){
         System.out.println(exchangeDTO);

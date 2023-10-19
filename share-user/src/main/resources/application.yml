@@ -20,6 +20,7 @@ spring:
         heart-beat-interval: 5000
         heart-beat-timeout: 15000
         namespace: dev
+        group: myGroup
 rocketmq:
   name-server: 49.234.46.251:9876
   consumer:
@@ -27,3 +28,21 @@ rocketmq:
 logging:
   level:
     top.om1ga.share.user.mapper: debug
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: top.om1ga.share.user.controller
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

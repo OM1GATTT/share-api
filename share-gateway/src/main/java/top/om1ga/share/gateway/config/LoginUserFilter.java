@@ -30,7 +30,10 @@ public class LoginUserFilter implements Ordered, GlobalFilter {
                 || path.contains("/user-service/user/login")
                 || path.contains("/user-service/user/register")
                 || path.contains("/content-service/share/notice")
-                || path.contains("/content-service/share/list")){
+                || path.contains("/content-service/share/list")
+                || path.contains("/user-service/v3/api-docs")
+                || path.contains("/content-service/v3/api-docs")
+        ){
             log.info("不需要登录验证：{}",path);
             return chain.filter(exchange);
         }else{

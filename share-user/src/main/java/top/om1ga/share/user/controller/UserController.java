@@ -1,6 +1,11 @@
 package top.om1ga.share.user.controller;
 
 import cn.hutool.json.JSONObject;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +27,7 @@ import java.util.List;
  * @date 2023年10月07日 14:36
  * @description UserController
  */
+@Tag(name = "用户中心")
 @RestController
 @RequestMapping("/user")
 @Slf4j
@@ -30,6 +36,10 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @Operation(summary = "积分明细")
+    @Parameters({@Parameter(name = "pageNo",description = "页码",in = ParameterIn.QUERY),
+            @Parameter(name = "pageSize",description = "每页个数",in = ParameterIn.QUERY),
+            @Parameter(name = "token",description = "请求token",in = ParameterIn.HEADER)})
     @GetMapping("/bonus/list")
     public CommonResp<List<BonusEventLog>> getBonusList(@RequestParam(required = false,defaultValue = "1")Integer pageNo,
                                                   @RequestParam(required = false,defaultValue = "20")Integer pageSize,
@@ -58,6 +68,7 @@ public class UserController {
         return userId;
     }
 
+    @Operation(summary = "更新积分")
     @PutMapping(value = "/update-bonus")
     public CommonResp<User> updateBonus(@RequestBody UserAddBonusMsgDTO userAddBonusMsgDTO){
         Long userId = userAddBonusMsgDTO.getUserId();
@@ -74,6 +85,7 @@ public class UserController {
         return commonResp;
     }
 
+    @Operation(summary = "查询用户总数")
     @GetMapping("/count")
     public CommonResp<Long> count(){
         Long count = userService.count();
@@ -82,6 +94,7 @@ public class UserController {
         return commonResp;
     }
 
+    @Operation(summary = "登录")
     @PostMapping("/login")
     public CommonResp<UserLoginResp> login(@Valid @RequestBody LoginDTO loginDTO){
         UserLoginResp userLoginResp = userService.login(loginDTO);
@@ -90,6 +103,7 @@ public class UserController {
         return commonResp;
     }
 
+    @Operation(summary = "注册")
     @PostMapping("/register")
     public CommonResp<Long> register(@Valid @RequestBody LoginDTO loginDTO){
         Long id = userService.register(loginDTO);
@@ -98,7 +112,9 @@ public class UserController {
         return commonResp;
     }
 
+    @Operation(summary = "根据ID查询用户信息")
     @GetMapping("/{id}")
+    @Parameters(@Parameter(name = "id",description = "用户ID",in = ParameterIn.PATH))
     public CommonResp<User> getUserById(@PathVariable Long id){
         User user = userService.findById(id);
         CommonResp<User> commonResp = new CommonResp<>();

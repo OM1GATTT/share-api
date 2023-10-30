@@ -36,6 +36,20 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    // updateAvatar接口
+    @Operation(summary = "修改头像")
+    @Parameters({@Parameter(name = "token", description = "请求token", in = ParameterIn.HEADER),
+                 @Parameter(name = "avatarUrl", description = "头像url", in = ParameterIn.QUERY)})
+    @PostMapping("/updateAvatar")
+    public CommonResp<String> updateAvatar(@RequestHeader(value = "token",required = false) String token,
+                                           @RequestParam String avatarUrl){
+        long userId = getUserIdFromToken(token);
+        String s = userService.updateAvatar(userId, avatarUrl);
+        CommonResp<String> commonResp = new CommonResp<>();
+        commonResp.setData(s);
+        return commonResp;
+    }
+
     @Operation(summary = "积分明细")
     @Parameters({@Parameter(name = "pageNo",description = "页码",in = ParameterIn.QUERY),
             @Parameter(name = "pageSize",description = "每页个数",in = ParameterIn.QUERY),

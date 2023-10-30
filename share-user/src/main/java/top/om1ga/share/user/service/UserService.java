@@ -1,7 +1,5 @@
 package top.om1ga.share.user.service;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.jwt.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -23,7 +21,6 @@ import top.om1ga.share.user.mapper.UserMapper;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author OM1GA
@@ -40,6 +37,13 @@ public class UserService {
 
     @Resource
     private BonusEventLogMapper bonusEventLogMapper;
+
+    public String updateAvatar(Long userId,String avatarUrl){
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
+        user.setAvatarUrl(avatarUrl);
+        int update = userMapper.update(user, new LambdaQueryWrapper<User>().eq(User::getId, userId));
+        return update==1?"更新成功":"更新失败";
+    }
 
     public List<BonusEventLog>  getBonusEventLogList(Integer pageNo,Integer pageSize,Long userId){
         if (userId==null){

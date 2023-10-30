@@ -19,6 +19,7 @@ import top.om1ga.share.content.domain.dto.ShareRequestDTO;
 import top.om1ga.share.content.domain.entity.Notice;
 import top.om1ga.share.content.domain.entity.Share;
 import top.om1ga.share.content.domain.resp.ShareResp;
+import top.om1ga.share.content.feign.UserService;
 import top.om1ga.share.content.service.NoticeService;
 import top.om1ga.share.content.service.ShareService;
 
@@ -45,15 +46,22 @@ public class ShareController {
 
     @Resource
     private ShareService shareService;
+    @Resource
+    private UserService userService;
 
     private final int MAX = 10;
 
 
     @Operation(summary = "更新头像")
-    @Parameters(@Parameter(name = "file",description = "文件",in= ParameterIn.QUERY))
+    @Parameters({@Parameter(name = "file",description = "文件",in= ParameterIn.QUERY),
+                 @Parameter(name = "token",description = "请求token",in = ParameterIn.HEADER)})
     @PostMapping("/uploadAvatar")
-    public CommonResp<String> uploadAvatar(MultipartFile file){
+    public CommonResp<String> uploadAvatar(@RequestHeader(value = "token",required = false) String token,MultipartFile file){
         String s = shareService.uploadAvatar(file);
+        String msg = userService.updateAvatar(token, s).getData();
+        if ("更新失败".equals(msg)) {
+            throw new IllegalArgumentException("更新头像出错");
+        }
         CommonResp<String> commonResp = new CommonResp<>();
         commonResp.setData(s);
         return commonResp;

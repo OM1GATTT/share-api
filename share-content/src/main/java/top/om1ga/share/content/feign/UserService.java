@@ -1,10 +1,7 @@
 package top.om1ga.share.content.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import top.om1ga.share.common.resp.CommonResp;
 
 /**
@@ -27,4 +24,6 @@ public interface UserService {
     @PutMapping("/update-bonus")
     CommonResp<User> updateBonus(@RequestBody UserAddBonusMsgDTO userAddBonusMsgDTO);
 
+    @PostMapping("/updateAvatar")
+    CommonResp<String> updateAvatar(@RequestHeader(value = "token",required = false) String token,@RequestParam String avatarUrl);
 }

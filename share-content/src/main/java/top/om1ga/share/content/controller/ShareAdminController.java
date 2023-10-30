@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import top.om1ga.share.common.resp.CommonResp;
 import top.om1ga.share.common.util.JwtUtil;
+import top.om1ga.share.content.auth.CheckAuth;
 import top.om1ga.share.content.domain.dto.ShareAuditDTO;
 import top.om1ga.share.content.domain.entity.Share;
 import top.om1ga.share.content.service.ShareService;
@@ -28,13 +29,13 @@ import java.util.List;
 @RequestMapping("/share/admin")
 @Slf4j
 public class ShareAdminController {
-
     @Resource
     private ShareService shareService;
 
     private final int MAX = 10;
 
     @Operation(summary = "获取还未审核的分享列表")
+    @CheckAuth("admin")
     @Parameters({@Parameter(name = "pageNo",description = "页码",in = ParameterIn.QUERY),
             @Parameter(name = "pageSize",description = "每页个数",in = ParameterIn.QUERY),
             @Parameter(name = "token",description = "请求token",in = ParameterIn.HEADER)})
@@ -51,6 +52,7 @@ public class ShareAdminController {
         return commonResp;
     }
 
+    @CheckAuth("admin")
     @Operation(summary = "审核")
     @Parameters(@Parameter(name = "id",description = "审核人ID",in = ParameterIn.PATH))
     @PostMapping("/audit/{id}")
